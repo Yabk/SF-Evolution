@@ -11,3 +11,4 @@ More information about the competition can be found on the following links:
 
 In order to run the evolution or the provided sample agents, project breezy has to be properly set up.  
 That includes Steam, Dota 2, Breezy Addon and Breezy Server.  
+More information about setting up all the above can be found on the competition page.  
