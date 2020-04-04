@@ -1,5 +1,4 @@
 """Module containing Cartesian Genetic Programming model of an Individual"""
-
 import random
 from ..individual import Individual
 from .modules import *
