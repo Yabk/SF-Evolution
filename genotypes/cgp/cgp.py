@@ -51,12 +51,11 @@ class CGPIndividual(Individual):
         i = 0
         while i < len(to_evaluate):
             output_index = to_evaluate[i]
-            if output_index >= self.input_len: # Is this check needed?
-                module_index = self._module_index(output_index)
-                module_dependencies = self.values[module_index:module_index+2]
-                for dependency in module_dependencies:
-                    if (dependency >= self.input_len) and (dependency not in to_evaluate):
-                        to_evaluate.append(dependency)
+            module_index = self._module_index(output_index)
+            module_dependencies = self.values[module_index:module_index+2]
+            for dependency in module_dependencies:
+                if (dependency >= self.input_len) and (dependency not in to_evaluate):
+                    to_evaluate.append(dependency)
             i += 1
 
         # Evaluate all modules that need to be evaluated
