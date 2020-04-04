@@ -11,7 +11,7 @@ class Individual(ABC):
         self.fitness = 0
 
     @abstractmethod
-    def evaluate(self, values):
+    def evaluate(self, inputs):
         """Evaluate given imputs and return the outputs"""
 
     @abstractmethod
