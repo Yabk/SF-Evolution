@@ -14,4 +14,4 @@ class Evaluator(ABC):
 
     @abstractmethod
     def batch_evaluate(self, individuals):
-        """Evaluate a batch of individuals"""
+        """Evaluate a batch of individuals and sort them by fitness in descending order"""
