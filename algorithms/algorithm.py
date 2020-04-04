@@ -1,4 +1,4 @@
-"""Module containing absract class for learning algorithm"""
+"""Module containing learning algorithm abstract class"""
 from abc import ABC, abstractmethod
 
 
