@@ -10,4 +10,10 @@ class Crossover(ABC):
 
     @abstractmethod
     def cross(self, individual_1, indvidual_2):
-        """Return child individual(s) using two given individuals as parents"""
+        """Return a list of child individual(s) using two given individuals as parents
+
+        :param individual_1: first parent
+        :param individual_2: second parent
+
+        :returns: a list of children (even if only one child)
+        """
