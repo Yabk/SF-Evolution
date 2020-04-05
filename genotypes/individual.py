@@ -27,6 +27,18 @@ class Individual(ABC):
         """Return a copy of self"""
         return deepcopy(self)
 
+    def __gt__(self, other):
+        return self.fitness > other.fitness
+
+    def __lt__(self, other):
+        return self.fitness < other.fitness
+
+    def __ge__(self, other):
+        return self.fitness >= other.fitness
+
+    def __le__(self, other):
+        return self.fitness <= other.fitness
+
 
 class IndividualGenerator(ABC):
     """Abstract individual factory class"""
