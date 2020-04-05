@@ -7,6 +7,8 @@ class Evaluator(ABC):
 
     def __init__(self):
         """Initialize the evaluator"""
+        self.input_len = 0
+        self.output_len = 0
 
     @abstractmethod
     def evaluate(self, individual):
