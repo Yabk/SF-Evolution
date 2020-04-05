@@ -1,4 +1,4 @@
-"""Module containing abstract class for learning models - individuals"""
+"""Module containing abstract class for learning models (individuals) and their factories"""
 from abc import ABC, abstractmethod
 from copy import deepcopy
 
@@ -26,3 +26,18 @@ class Individual(ABC):
     def copy(self):
         """Return a copy of self"""
         return deepcopy(self)
+
+
+class IndividualGenerator(ABC):
+    """Abstract individual factory class"""
+
+    def __init__(self):
+        """Initialize the hyperparameters for generated individuals"""
+
+    @abstractmethod
+    def generate(self):
+        """Generate an individual using defined hyperparameters"""
+
+    def batch_generate(self, individual_count):
+        """Generate a batch of inidividuals"""
+        return [self.generate() for _ in range(individual_count)]

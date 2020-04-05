@@ -1,7 +1,26 @@
 """Module containing Cartesian Genetic Programming model of an Individual"""
 import random
-from ..individual import Individual
+from ..individual import Individual, IndividualGenerator
 from .modules import *
+
+
+class CGPGenerator(IndividualGenerator):
+    """A CPG individual factory"""
+
+    def __init__(self, input_len, grid_size, output_len,
+                 modules=(module_sum, module_difference, module_product,
+                          module_quotient, module_sine, module_cosine,
+                          min, max)):
+        """Initialize CPG hyperparameters"""
+        super().__init__()
+        self.input_len = input_len
+        self.grid_size = grid_size
+        self.output_len = output_len
+        self.modules = modules
+
+    def generate(self):
+        """Generate a CGP individual"""
+        return CGPIndividual(self.input_len, self.grid_size, self.output_len, self.modules)
 
 
 class CGPIndividual(Individual):
