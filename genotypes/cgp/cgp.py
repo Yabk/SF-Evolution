@@ -29,7 +29,7 @@ class CGPIndividual(Individual):
     def __init__(self, input_len, grid_size, output_len,
                  modules=(module_sum, module_difference, module_product,
                           module_quotient, module_sine, module_cosine,
-                          min, max)):
+                          min, max), values=None):
         """Initialize CGPIndividual.
 
         :param input_len: number of inputs to the individual
@@ -45,14 +45,22 @@ class CGPIndividual(Individual):
         self.output_len = output_len
         self.modules = modules
         self.modules_len = len(modules)
-        self.values = [0] * (self.grid_width * self.grid_height * 3 + output_len)
 
-        self.randomize()
+        if values is None:
+            self.values = [0] * (self.grid_width * self.grid_height * 3 + output_len)
+            self.randomize()
+        else:
+            if not self.check_values(values, input_len, grid_size, output_len):
+                raise ValueError('Invalid values length ({}) for given individual dimensions'
+                                 .format(len(values)))
+            self.values = values
+
+
 
     def evaluate(self, inputs):
         """Evaluate given inputs and return outputs"""
         if len(inputs) != self.input_len:
-            raise ValueError("Bad input length for inputs {}, was expecting length {}."
+            raise ValueError('Bad input length for inputs {}, was expecting length {}.'
                              .format(inputs, self.input_len))
 
         module_outputs = {}
@@ -117,8 +125,8 @@ class CGPIndividual(Individual):
         values = [int(v) for v in lines[2].split(' ')]
         fitness = float(lines[3])
 
-        cgp = CGPIndividual(input_len, (grid_width, grid_height), output_len, modules=modules)
-        cgp.values = values
+        cgp = CGPIndividual(input_len, (grid_width, grid_height),
+                            output_len, modules=modules, values=values)
         cgp.fitness = fitness
 
         return cgp
@@ -147,7 +155,13 @@ class CGPIndividual(Individual):
     def _module_index(self, output_index):
         """Return index in values array for module with given output_index"""
         if output_index < self.input_len:
-            raise ValueError("Given index {} is input. Input length for given \
-                    CGPIndividual is {}".format(output_index, self.input_len))
+            raise ValueError('Given index {} is input. Input length for given \
+                    CGPIndividual is {}'.format(output_index, self.input_len))
 
         return (output_index - self.input_len) * 3
+
+
+    @staticmethod
+    def check_values(values, input_len, grid_size, output_len):
+        """Check if length of values is valid according to given individual dimensions"""
+        return len(values) == (grid_size[0] * grid_size[1] * 3) + output_len
