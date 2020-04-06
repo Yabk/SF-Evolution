@@ -104,6 +104,7 @@ class CGPIndividual(Individual):
                               str(self.grid_height)+' '+str(self.output_len)+'\n')
             export_file.write(' '.join([module.__name__ for module in self.modules])+'\n')
             export_file.write(' '.join([str(v) for v in self.values])+'\n')
+            export_file.write(str(self.fitness))
 
 
     @staticmethod
@@ -114,9 +115,11 @@ class CGPIndividual(Individual):
         input_len, grid_width, grid_height, output_len = [int(v) for v in lines[0].split(' ')]
         modules = [eval(module) for module in lines[1].split(' ')]
         values = [int(v) for v in lines[2].split(' ')]
+        fitness = float(lines[3])
 
         cgp = CGPIndividual(input_len, (grid_width, grid_height), output_len, modules=modules)
         cgp.values = values
+        cgp.fitness = fitness
 
         return cgp
 
