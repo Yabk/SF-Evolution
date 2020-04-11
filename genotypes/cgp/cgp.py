@@ -29,7 +29,7 @@ class CGPIndividual(Individual):
     def __init__(self, input_len, grid_size, output_len,
                  modules=(module_sum, module_difference, module_product,
                           module_quotient, module_sine, module_cosine,
-                          min, max), values=None):
+                          min, max), chromosome=None):
         """Initialize CGPIndividual.
 
         :param input_len: number of inputs to the individual
@@ -46,14 +46,14 @@ class CGPIndividual(Individual):
         self.modules = modules
         self.modules_len = len(modules)
 
-        if values is None:
-            self.values = [0] * (self.grid_width * self.grid_height * 3 + output_len)
+        if chromosome is None:
+            self.chromosome = [0] * (self.grid_width * self.grid_height * 3 + output_len)
             self.randomize()
         else:
-            if not self.check_values(values, input_len, grid_size, output_len):
-                raise ValueError('Invalid values length ({}) for given individual dimensions'
-                                 .format(len(values)))
-            self.values = values
+            if not self.check_chromosome(chromosome, input_len, grid_size, output_len):
+                raise ValueError('Invalid chromosome length ({}) for given individual dimensions'
+                                 .format(len(chromosome)))
+            self.chromosome = chromosome
 
 
 
@@ -70,7 +70,7 @@ class CGPIndividual(Individual):
         # Find all the modules that need to be evaluated
 
         to_evaluate = []
-        for output in self.values[-self.output_len:]:
+        for output in self.chromosome[-self.output_len:]:
             if output >= self.input_len:
                 to_evaluate.append(output)
 
@@ -78,7 +78,7 @@ class CGPIndividual(Individual):
         while i < len(to_evaluate):
             output_index = to_evaluate[i]
             module_index = self._module_index(output_index)
-            module_dependencies = self.values[module_index:module_index+2]
+            module_dependencies = self.chromosome[module_index:module_index+2]
             for dependency in module_dependencies:
                 if (dependency >= self.input_len) and (dependency not in to_evaluate):
                     to_evaluate.append(dependency)
@@ -90,16 +90,16 @@ class CGPIndividual(Individual):
 
         for output_index in to_evaluate:
             module_index = self._module_index(output_index)
-            input1 = module_outputs[self.values[module_index + 0]]
-            input2 = module_outputs[self.values[module_index + 1]]
-            module = self.modules[self.values[module_index + 2]]
+            input1 = module_outputs[self.chromosome[module_index + 0]]
+            input2 = module_outputs[self.chromosome[module_index + 1]]
+            module = self.modules[self.chromosome[module_index + 2]]
 
             module_outputs[output_index] = module(input1, input2)
 
 
         # Compose final outputs
         outputs = []
-        for output in self.values[-self.output_len:]:
+        for output in self.chromosome[-self.output_len:]:
             outputs.append(module_outputs[output])
 
         return outputs
@@ -111,7 +111,7 @@ class CGPIndividual(Individual):
             export_file.write(str(self.input_len)+' '+str(self.grid_width)+' '+
                               str(self.grid_height)+' '+str(self.output_len)+'\n')
             export_file.write(' '.join([module.__name__ for module in self.modules])+'\n')
-            export_file.write(' '.join([str(v) for v in self.values])+'\n')
+            export_file.write(' '.join([str(v) for v in self.chromosome])+'\n')
             export_file.write(str(self.fitness))
 
 
@@ -122,18 +122,18 @@ class CGPIndividual(Individual):
             lines = [line.rstrip() for line in import_file.readlines()]
         input_len, grid_width, grid_height, output_len = [int(v) for v in lines[0].split(' ')]
         modules = [eval(module) for module in lines[1].split(' ')]
-        values = [int(v) for v in lines[2].split(' ')]
+        chromosome = [int(v) for v in lines[2].split(' ')]
         fitness = float(lines[3])
 
         cgp = CGPIndividual(input_len, (grid_width, grid_height),
-                            output_len, modules=modules, values=values)
+                            output_len, modules=modules, chromosome=chromosome)
         cgp.fitness = fitness
 
         return cgp
 
 
     def randomize(self):
-        """Randomize the values of this individual"""
+        """Randomize the chromosome of this individual"""
         # Randomize layer by layer ensuring we end up with a valid CGP individual
         for layer in range(self.grid_width):
             # len of allowed module inputs for this layer
@@ -141,19 +141,19 @@ class CGPIndividual(Individual):
 
             for module in range(self.grid_height):
                 module_index = 3 * (self.grid_height * layer + module)
-                self.values[module_index + 0] = random.randrange(0, valid_input_len)
-                self.values[module_index + 1] = random.randrange(0, valid_input_len)
-                self.values[module_index + 2] = random.randrange(0, self.modules_len)
+                self.chromosome[module_index + 0] = random.randrange(0, valid_input_len)
+                self.chromosome[module_index + 1] = random.randrange(0, valid_input_len)
+                self.chromosome[module_index + 2] = random.randrange(0, self.modules_len)
 
         # Randomize outputs
         valid_outputs_len = self.input_len + self.grid_width * self.grid_height
         size = self.grid_width * self.grid_height * 3 + self.output_len
         for i in range(size - self.output_len, size):
-            self.values[i] = random.randrange(0, valid_outputs_len)
+            self.chromosome[i] = random.randrange(0, valid_outputs_len)
 
 
     def _module_index(self, output_index):
-        """Return index in values array for module with given output_index"""
+        """Return index in chromosome array for module with given output_index"""
         if output_index < self.input_len:
             raise ValueError('Given index {} is input. Input length for given \
                     CGPIndividual is {}'.format(output_index, self.input_len))
@@ -162,6 +162,6 @@ class CGPIndividual(Individual):
 
 
     @staticmethod
-    def check_values(values, input_len, grid_size, output_len):
-        """Check if length of values is valid according to given individual dimensions"""
-        return len(values) == (grid_size[0] * grid_size[1] * 3) + output_len
+    def check_chromosome(chromosome, input_len, grid_size, output_len):
+        """Check if length of chromosome is valid according to given individual dimensions"""
+        return len(chromosome) == (grid_size[0] * grid_size[1] * 3) + output_len
