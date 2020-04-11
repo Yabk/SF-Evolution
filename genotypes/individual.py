@@ -47,8 +47,12 @@ class IndividualGenerator(ABC):
         """Initialize the hyperparameters for generated individuals"""
 
     @abstractmethod
-    def generate(self):
-        """Generate an individual using defined hyperparameters"""
+    def generate(self, chromosome=None):
+        """Generate an individual using predefined hyperparameters.
+
+        :param chromosome: Use given chromosome value for new individual
+                           Random if None.
+        """
 
     def batch_generate(self, individual_count):
         """Generate a batch of inidividuals"""

@@ -18,9 +18,14 @@ class CGPGenerator(IndividualGenerator):
         self.output_len = output_len
         self.modules = modules
 
-    def generate(self):
-        """Generate a CGP individual"""
-        return CGPIndividual(self.input_len, self.grid_size, self.output_len, self.modules)
+    def generate(self, chromosome=None):
+        """Generate an individual using predefined hyperparameters.
+
+        :param chromosome: Use given chromosome value for new individual
+                           Random if None.
+        """
+        return CGPIndividual(self.input_len, self.grid_size, self.output_len,
+                             self.modules, chromosome=chromosome)
 
 
 class CGPIndividual(Individual):
