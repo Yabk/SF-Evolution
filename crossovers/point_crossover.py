@@ -15,7 +15,7 @@ class PointCrossover(Crossover):
         super().__init__(individual_generator)
 
         if k < 1:
-            raise ValueError(f'Number of crossover points must be greater than 1. {k} was given')
+            raise ValueError(f'Number of crossover points must be greater than 0. {k} was given')
         self.k = k
 
 
