@@ -5,13 +5,13 @@ from .algorithm import Algorithm
 class GeneticAlgorithm(Algorithm):
     """Genetic algorithm class"""
 
-    def __init__(self, evaluator, reporter, selection, crossover, mutation,
+    def __init__(self, evaluator, reporter, selector, crossover, mutation,
                  population_size, individual_generator, max_iterations):
         """Initialize genetic algorithm hyperparameters.
 
         :param evaluator: Evaluator instance
         :param reporter: Reporter instance
-        :param selection: Selection to be used
+        :param selector: Selector to be used
         :param crossover: Crossover to be used
         :param mutation: Mutation to be used
         :param population_size: population size
@@ -22,7 +22,7 @@ class GeneticAlgorithm(Algorithm):
         super().__init__()
         self.evaluator = evaluator
         self.reporter = reporter
-        self.selection = selection
+        self.selector = selector
         self.crossover = crossover
         self.mutation = mutation
         self.population_size = population_size
@@ -43,8 +43,8 @@ class GeneticAlgorithm(Algorithm):
             next_population = []
 
             while len(next_population) > self.population_size:
-                parent_1 = self.selection.select(self.population)
-                parent_2 = self.selection.select(self.population)
+                parent_1 = self.selector.select(self.population)
+                parent_2 = self.selector.select(self.population)
                 next_population.extend(self.crossover.crossover(parent_1, parent_2))
 
             self.population = next_population
