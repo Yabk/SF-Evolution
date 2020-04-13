@@ -82,7 +82,7 @@ class CGPIndividual(Individual):
         i = 0
         while i < len(to_evaluate):
             output_index = to_evaluate[i]
-            module_index = self._module_index(output_index)
+            module_index = self.module_index(output_index)
             module_dependencies = self.chromosome[module_index:module_index+2]
             for dependency in module_dependencies:
                 if (dependency >= self.input_len) and (dependency not in to_evaluate):
@@ -94,7 +94,7 @@ class CGPIndividual(Individual):
         to_evaluate.sort()
 
         for output_index in to_evaluate:
-            module_index = self._module_index(output_index)
+            module_index = self.module_index(output_index)
             input1 = module_outputs[self.chromosome[module_index + 0]]
             input2 = module_outputs[self.chromosome[module_index + 1]]
             module = self.modules[self.chromosome[module_index + 2]]
@@ -157,7 +157,7 @@ class CGPIndividual(Individual):
             self.chromosome[i] = random.randrange(0, valid_outputs_len)
 
 
-    def _module_index(self, output_index):
+    def module_index(self, output_index):
         """Return index in chromosome array for module with given output_index"""
         if output_index < self.input_len:
             raise ValueError('Given index {} is input. Input length for given \
