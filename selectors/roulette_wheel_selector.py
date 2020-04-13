@@ -18,6 +18,10 @@ class RouletteWheelSelector(Selector):
 
         base_fitness = min(choose_from).fitness
         fitnes_sum = sum(individual.fitness - base_fitness for individual in choose_from)
-        weights = [(i.fitness - base_fitness)/fitnes_sum for i in choose_from]
+        try:
+            weights = [(i.fitness - base_fitness)/fitnes_sum for i in choose_from]
+        except ZeroDivisionError:
+            # All individuals have the same fitness
+            weights = None
 
         return random.choices(choose_from, weights=weights)[0]

@@ -16,6 +16,6 @@ class Evaluator(ABC):
 
     def batch_evaluate(self, individuals):
         """Evaluate a batch of individuals and sort them by fitness in descending order"""
-        for individual in range(len(individuals)):
+        for individual in individuals:
             self.evaluate(individual)
         individuals.sort(key=lambda individual: individual.fitness, reverse=True)

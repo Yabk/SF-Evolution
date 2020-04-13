@@ -42,10 +42,10 @@ class GeneticAlgorithm(Algorithm):
             print(f'Iteration : {iteration}')
             next_population = []
 
-            while len(next_population) > self.population_size:
+            while len(next_population) < self.population_size:
                 parent_1 = self.selector.select(self.population)
                 parent_2 = self.selector.select(self.population)
-                next_population.extend(self.crossover.crossover(parent_1, parent_2))
+                next_population.extend(self.crossover.cross(parent_1, parent_2))
 
             self.population = next_population
             self.evaluator.batch_evaluate(self.population)
