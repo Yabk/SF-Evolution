@@ -5,7 +5,7 @@ from .algorithm import Algorithm
 class GeneticAlgorithm(Algorithm):
     """Genetic algorithm class"""
 
-    def __init__(self, evaluator, reporter, selector, crossover, mutation,
+    def __init__(self, reporters, evaluator, selector, crossover, mutation,
                  population_size, individual_generator, max_iterations):
         """Initialize genetic algorithm hyperparameters.
 
@@ -19,9 +19,8 @@ class GeneticAlgorithm(Algorithm):
         :param max_iterations: Maximum iterations of the algorithm.
                                If set to less than 0, algorithm will run indefinitely.
         """
-        super().__init__()
+        super().__init__(reporters)
         self.evaluator = evaluator
-        self.reporter = reporter
         self.selector = selector
         self.crossover = crossover
         self.mutation = mutation
@@ -35,7 +34,7 @@ class GeneticAlgorithm(Algorithm):
 
         self.evaluator.batch_evaluate(self.population)
         self.best_individual = self.population[0]
-        self.reporter.report(self.population)
+        self._report()
 
         iteration = 1
         while iteration != self.max_iterations:
@@ -51,7 +50,7 @@ class GeneticAlgorithm(Algorithm):
             self.evaluator.batch_evaluate(self.population)
             if self.population[0].fitness > self.best_individual.fitness:
                 self.best_individual = self.population[0]
-            self.reporter.report(self.population)
+            self._report()
             iteration += 1
 
-        self.save_best_individual()
+        self._save_best_individual()
