@@ -6,26 +6,25 @@ class GeneticAlgorithm(Algorithm):
     """Genetic algorithm class"""
 
     def __init__(self, reporters, evaluator, selector, crossover, mutation,
-                 population_size, individual_generator, max_iterations):
+                 population_size, individual_generator, max_iterations, target_fitness=None):
         """Initialize genetic algorithm hyperparameters.
 
         :param evaluator: Evaluator instance
-        :param reporter: Reporter instance
+        :param reporters: List of Reporter instances
         :param selector: Selector to be used
         :param crossover: Crossover to be used
         :param mutation: Mutation to be used
         :param population_size: population size
         :param individual_generator: Individual factory
         :param max_iterations: Maximum iterations of the algorithm.
-                               If set to less than 0, algorithm will run indefinitely.
+                               If set to 0 or less, algorithm will run indefinitely.
         """
-        super().__init__(reporters)
+        super().__init__(reporters, max_iterations, target_fitness)
         self.evaluator = evaluator
         self.selector = selector
         self.crossover = crossover
         self.mutation = mutation
         self.population_size = population_size
-        self.max_iterations = max_iterations
         self.population = individual_generator.batch_generate(population_size)
 
 
@@ -33,8 +32,13 @@ class GeneticAlgorithm(Algorithm):
         """Run the genetic algorithm"""
 
         self.evaluator.batch_evaluate(self.population)
-        self.best_individual = self.population[0]
         self._report()
+
+        self.best_individual = self.population[0]
+        if self._stop_condition():
+            self._save_best_individual()
+            return
+
 
         iteration = 1
         while iteration != self.max_iterations:
@@ -48,9 +52,13 @@ class GeneticAlgorithm(Algorithm):
 
             self.population = next_population
             self.evaluator.batch_evaluate(self.population)
+            self._report()
+
             if self.population[0].fitness > self.best_individual.fitness:
                 self.best_individual = self.population[0]
-            self._report()
+                if self._stop_condition():
+                    break
+
             iteration += 1
 
         self._save_best_individual()

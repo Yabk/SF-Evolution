@@ -16,17 +16,17 @@ def main():
     selector = RouletteWheelSelector()
 
     input_len = 3
-    grid_size = (3, 3)
+    grid_size = (4, 3)
     output_len = 1
     individual_generator = CGPGenerator(input_len, grid_size, output_len)
 
     crossover = PointCrossover(individual_generator, 2)
-    mutation = CGPSmartMutation(n=4)
-    population_size = 100
-    max_iterations = 30
+    mutation = CGPSmartMutation(n=3)
+    population_size = 1000
+    max_iterations = 100
 
     alg = GeneticAlgorithm(reporters, evaluator, selector, crossover, mutation,
-                           population_size, individual_generator, max_iterations)
+                           population_size, individual_generator, max_iterations, target_fitness=0)
 
     alg.run()
 
