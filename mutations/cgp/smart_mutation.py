@@ -18,6 +18,10 @@ class CGPSmartMutation(CGPMutation):
         for index in indices:
             self.mutate_index(individual, index)
 
+        for index in range(len(individual.chromosome)):
+            if index not in active_indices:
+                self.mutate_index(individual, index)
+
 
     @staticmethod
     def _get_active_indices(individual):
