@@ -19,8 +19,7 @@ class GeneticAlgorithm(Algorithm):
         :param max_iterations: Maximum iterations of the algorithm.
                                If set to 0 or less, algorithm will run indefinitely.
         """
-        super().__init__(reporters, max_iterations, target_fitness)
-        self.evaluator = evaluator
+        super().__init__(reporters, max_iterations, evaluator, individual_generator, target_fitness)
         self.selector = selector
         self.crossover = crossover
         self.mutation = mutation

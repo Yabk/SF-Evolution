@@ -7,16 +7,20 @@ from datetime import datetime
 class Algorithm(ABC):
     """Abstract learning algorithm class"""
 
-    def __init__(self, reporters, max_iterations, target_fitness=None):
+    def __init__(self, reporters, max_iterations, evaluator, individual_generator, target_fitness=None):
         """Initialize hyperparameters for the algorithm.
 
         :param reporters: List of Reporter instances
         :param max_iterations: Max iterations of the algorithm
+        :param evaluator: Evaluator instance
+        :param individual_generator: Individual factory
         :param target_fitness: If an individual reaches target_fitness the algorithm is stopped.
                                If None, won't stop based on fitness.
         """
         self.reporters = reporters
         self.max_iterations = max_iterations
+        self.evaluator = evaluator
+        self.individual_generator = individual_generator
         self.target_fitness = target_fitness
         self.best_individual = None
         self.population = []
