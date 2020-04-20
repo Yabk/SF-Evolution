@@ -39,6 +39,9 @@ class Individual(ABC):
     def __le__(self, other):
         return self.fitness <= other.fitness
 
+    def __str__(self):
+        return str(self.fitness)
+
 
 class IndividualGenerator(ABC):
     """Abstract individual factory class"""
