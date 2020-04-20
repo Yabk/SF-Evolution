@@ -41,7 +41,6 @@ class GeneticAlgorithm(Algorithm):
 
         iteration = 1
         while iteration != self.max_iterations:
-            print(f'Iteration : {iteration}')
             next_population = []
 
             while len(next_population) < self.population_size:
