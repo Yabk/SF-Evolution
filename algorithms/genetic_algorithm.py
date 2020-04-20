@@ -46,7 +46,9 @@ class GeneticAlgorithm(Algorithm):
             while len(next_population) < self.population_size:
                 parent_1 = self.selector.select(self.population)
                 parent_2 = self.selector.select(self.population)
-                next_population.extend(self.crossover.cross(parent_1, parent_2))
+                children = self.crossover.cross(parent_1, parent_2)
+                self.mutation.batch_mutate(children)
+                next_population.extend(children)
 
             self.population = next_population
             self.evaluator.batch_evaluate(self.population)
