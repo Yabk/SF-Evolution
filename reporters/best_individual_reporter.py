@@ -2,8 +2,8 @@
 from sys import float_info
 from .reporter import Reporter
 
-class FitnessReporter(Reporter):
-    """Fitness Reporter class"""
+class BestIndividualReporter(Reporter):
+    """Best Individual Reporter class"""
 
     def __init__(self, start_at=-float_info.max):
         """IInitialize the reporter
