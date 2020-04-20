@@ -11,3 +11,8 @@ class Mutation(ABC):
     @abstractmethod
     def mutate(self, individual):
         """Mutate given individual"""
+
+    def batch_mutate(self, individuals):
+        """Mutate given group of individuals"""
+        for individual in individuals:
+            self.mutate(individual)
