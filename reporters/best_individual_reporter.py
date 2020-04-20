@@ -6,7 +6,7 @@ class BestIndividualReporter(Reporter):
     """Best Individual Reporter class"""
 
     def __init__(self, start_at=-float_info.max):
-        """IInitialize the reporter
+        """Initialize the reporter
 
         :param start_at: Starting fitness
         """
