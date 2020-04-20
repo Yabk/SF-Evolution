@@ -1,33 +1,29 @@
 """Module contianing a test run of Genetic Algorithm and CGP in problem of symbolic regression"""
-from selectors.roulette_wheel_selector import RouletteWheelSelector
-from algorithms.genetic_algorithm import GeneticAlgorithm
-from reporters.iteration_reporter import IterationReporter
-from reporters.fitness_reporter import FitnessReporter
+from algorithms.evolution_strategy import EvolutionStrategy
+from reporters.best_individual_reporter import BestIndividualReporter
 from evaluators.math_function_evaluator import MathFunctionEvaluator
-from crossovers.point_crossover import PointCrossover
 from mutations.cgp.smart_mutation import CGPSmartMutation
 from genotypes.cgp.cgp import CGPGenerator
 
 
 def main():
     """Run a symbolic regression on "x+y-z" expression using CGP and genetic algorithm"""
-    evaluator = MathFunctionEvaluator('2*x+y-z', [(-1, -1, -1), (-2, -3, -1), (0, -1, 2),
-                                                  (1, 3, -2), (-2, -1, 4), (2, 3, -1)])
-    reporters = [IterationReporter(), FitnessReporter()]
-    selector = RouletteWheelSelector()
+    evaluator = MathFunctionEvaluator('2*x+2*y-z', [(-1, -1, 5), (-2, -3, 2), (0, -1, -123),
+                                                    (1, 3, 5), (-2, -1, 0), (2, 3, 2)])
+    reporters = [BestIndividualReporter()]
 
     input_len = 3
-    grid_size = (4, 3)
+    grid_size = (3, 3)
     output_len = 1
     individual_generator = CGPGenerator(input_len, grid_size, output_len)
 
-    crossover = PointCrossover(individual_generator, 2)
-    mutation = CGPSmartMutation(n=3)
-    population_size = 1000
-    max_iterations = 100
+    mutation = CGPSmartMutation(n=1)
 
-    alg = GeneticAlgorithm(reporters, evaluator, selector, crossover, mutation,
-                           population_size, individual_generator, max_iterations, target_fitness=0)
+    max_iterations = 0
+    parent_count = 1
+    children_count = 4
+    alg = EvolutionStrategy(reporters, max_iterations, evaluator, individual_generator,
+                            parent_count, children_count, mutation, elitism=True, target_fitness=0)
 
     alg.run()
 
