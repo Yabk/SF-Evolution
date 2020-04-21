@@ -31,18 +31,24 @@ class CGPMutation(Mutation):
         """Mutate a CGP individual on given index."""
 
         node_count = individual.grid_width * individual.grid_height
-        if index >= node_count*3:
+        if index >= node_count*3 + individual.constant_len:
             # Index defines one of individual's outputs
-            individual.chromosome[index] = random.randrange(individual.input_len + node_count)
+            individual.chromosome[index] = random.randrange(individual.input_len +
+                                                            individual.constant_len + node_count)
+
+        elif index < individual.constant_len:
+            # Index defines one of individual's constants
+            individual.chromosome[index] = random.randrange(len(individual.constants))
 
         else:
-            if (index + 1) % 3 == 0:
+            if (index - individual.constant_len + 1) % 3 == 0:
                 # Index defines module function
                 individual.chromosome[index] = random.randrange(len(individual.modules))
             else:
                 # Index defines module input
-                module_index = index // 3
+                module_index = (index - individual.constant_len) // 3
                 layer_index = module_index // individual.grid_height
 
-                valid_input_len = individual.input_len + individual.grid_height * layer_index
+                valid_input_len = (individual.input_len + individual.constant_len
+                                   + individual.grid_height * layer_index)
                 individual.chromosome[index] = random.randrange(valid_input_len)

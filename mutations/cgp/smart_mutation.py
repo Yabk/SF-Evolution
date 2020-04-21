@@ -35,19 +35,25 @@ class CGPSmartMutation(CGPMutation):
             active_indices.add(i)
 
         for output in individual.chromosome[-individual.output_len:]:
-            if output >= individual.input_len:
+            if individual.input_len <= output < individual.output_len + individual.constant_len:
+                active_indices.add(output)
+            elif output >= individual.input_len + individual.constant_len:
                 to_check.add(output)
 
         while to_check:
             current = to_check.pop()
             active_modules.add(current)
             index = individual.module_index(current)
-            if ((individual.chromosome[index + 0] >= individual.input_len) and
-                    individual.chromosome[index + 0] not in active_modules):
+            if ((individual.chromosome[index + 0] >= individual.input_len + individual.constant_len)
+                    and individual.chromosome[index + 0] not in active_modules):
                 to_check.add(individual.chromosome[index + 0])
-            if ((individual.chromosome[index + 1] >= individual.input_len) and
-                    individual.chromosome[index + 1] not in active_modules):
+            elif individual.chromosome[index + 0] >= individual.input_len:
+                active_indices.add(individual.chromosome[index + 0])
+            if ((individual.chromosome[index + 1] >= individual.input_len + individual.constant_len)
+                    and individual.chromosome[index + 1] not in active_modules):
                 to_check.add(individual.chromosome[index + 1])
+            elif individual.chromosome[index + 1] >= individual.input_len:
+                active_indices.add(individual.chromosome[index + 1])
             active_indices.add(index + 0)
             active_indices.add(index + 1)
             active_indices.add(index + 2)
