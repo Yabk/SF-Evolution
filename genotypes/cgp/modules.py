@@ -33,3 +33,8 @@ def module_sine(a, b):
 def module_cosine(a, b):
     """Module function - cosine"""
     return math.cos(a)
+
+
+def module_negative(a, b):
+    """Module function - negative first argument"""
+    return -a

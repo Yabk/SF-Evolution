@@ -10,7 +10,7 @@ class CGPGenerator(IndividualGenerator):
     def __init__(self, input_len, grid_size, output_len,
                  modules=(module_sum, module_difference, module_product,
                           module_quotient, module_sine, module_cosine,
-                          min, max)):
+                          module_negative, min, max)):
         """Initialize CPG hyperparameters"""
         super().__init__()
         self.input_len = input_len
@@ -34,7 +34,7 @@ class CGPIndividual(Individual):
     def __init__(self, input_len, grid_size, output_len,
                  modules=(module_sum, module_difference, module_product,
                           module_quotient, module_sine, module_cosine,
-                          min, max), chromosome=None):
+                          module_negative, min, max), chromosome=None):
         """Initialize CGPIndividual.
 
         :param input_len: number of inputs to the individual
