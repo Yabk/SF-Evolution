@@ -25,6 +25,7 @@ class Algorithm(ABC):
         self.target_fitness = target_fitness
         self.best_individual = None
         self.population = []
+        self.iteration = 0
 
     @abstractmethod
     def run(self):
@@ -49,3 +50,15 @@ class Algorithm(ABC):
     def _stop_condition(self):
         return False if self.target_fitness is None  \
                      else self.best_individual.fitness >= self.target_fitness
+
+
+    def _check_iteration(self):
+        """Increase iteration counter, check for new_best individual and stop condition
+
+        :returns: stop condition boolean
+        """
+        self.iteration += 1
+        if self.population[0].fitness > self.best_individual.fitness:
+            self.best_individual = self.population[0]
+            return self._stop_condition()
+        return False

@@ -44,8 +44,8 @@ class EvolutionStrategy(Algorithm):
             self._save_best_individual()
             return
 
-        iteration = 1
-        while iteration != self.max_iterations:
+        self.iteration = 1
+        while self.iteration != self.max_iterations:
             self.children_population = []
 
             # Reproduction
@@ -69,12 +69,8 @@ class EvolutionStrategy(Algorithm):
                                          reverse=True)[:self.parent_count]
 
             self._report()
-            if self.population[0].fitness > self.best_individual.fitness:
-                self.best_individual = self.population[0]
-                if self._stop_condition():
-                    break
-
-            iteration += 1
+            if self._check_iteration():
+                break
 
         self._save_best_individual()
 
