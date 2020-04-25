@@ -7,7 +7,8 @@ from datetime import datetime
 class Algorithm(ABC):
     """Abstract learning algorithm class"""
 
-    def __init__(self, reporters, max_iterations, evaluator, individual_generator, target_fitness=None):
+    def __init__(self, reporters, max_iterations, evaluator, individual_generator,
+                 target_fitness=None):
         """Initialize hyperparameters for the algorithm.
 
         :param reporters: List of Reporter instances
@@ -31,7 +32,8 @@ class Algorithm(ABC):
 
     def _save_best_individual(self):
         """Save the best individual to file"""
-        filename = datetime.today().isoformat()+'-'+self.__class__.__name__+'.txt'
+        filename = datetime.today().isoformat()+'-'+self.__class__.__name__+'-'+\
+                   self.best_individual.__class__.__name__+'.txt'
         try:
             self.best_individual.to_file('./best_individuals/'+filename)
         except FileNotFoundError:
