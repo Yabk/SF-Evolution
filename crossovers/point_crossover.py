@@ -1,4 +1,4 @@
-"""Module containing k-point point crossover"""
+"""Module containing k-point crossover"""
 import random
 from .crossover import Crossover
 
@@ -24,7 +24,17 @@ class PointCrossover(Crossover):
         Parents should have their chromosomes as lists in attribute named chromosome.
         Cromosomes should be of equal length.
         """
-        points = sorted(random.sample(range(1, len(parent_1.chromosome)), self.k))
+        child_chromosomes = self._cross_chromosomes(parent_1.chromosome, parent_2.chromosome)
+
+        child_1 = self.individual_generator.generate(child_chromosomes[0])
+        child_2 = self.individual_generator.generate(child_chromosomes[1])
+
+        return child_1, child_2
+
+
+    def _cross_chromosomes(self, parent_chromo_1, parent_chromo_2):
+        """Cross 2 given chromosomes that are represented as one dimensional lists"""
+        points = sorted(random.sample(range(1, len(parent_chromo_1)), self.k))
         chromosome_1 = []
         chromosome_2 = []
 
@@ -32,22 +42,19 @@ class PointCrossover(Crossover):
         prev_point = 0
         for point in points:
             if switch:
-                chromosome_1 += parent_2.chromosome[prev_point:point]
-                chromosome_2 += parent_1.chromosome[prev_point:point]
+                chromosome_1 += parent_chromo_2[prev_point:point]
+                chromosome_2 += parent_chromo_1[prev_point:point]
             else:
-                chromosome_1 += parent_1.chromosome[prev_point:point]
-                chromosome_2 += parent_2.chromosome[prev_point:point]
+                chromosome_1 += parent_chromo_1[prev_point:point]
+                chromosome_2 += parent_chromo_2[prev_point:point]
             prev_point = point
             switch = not switch
 
         if switch:
-            chromosome_1 += parent_2.chromosome[prev_point:]
-            chromosome_2 += parent_1.chromosome[prev_point:]
+            chromosome_1 += parent_chromo_2[prev_point:]
+            chromosome_2 += parent_chromo_1[prev_point:]
         else:
-            chromosome_1 += parent_1.chromosome[prev_point:]
-            chromosome_2 += parent_2.chromosome[prev_point:]
+            chromosome_1 += parent_chromo_1[prev_point:]
+            chromosome_2 += parent_chromo_2[prev_point:]
 
-        child_1 = self.individual_generator.generate(chromosome_1)
-        child_2 = self.individual_generator.generate(chromosome_2)
-
-        return child_1, child_2
+        return chromosome_1, chromosome_2
