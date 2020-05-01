@@ -82,13 +82,37 @@ class NNIndividual(Individual):
         return nn
 
 
+    def serialize(self):
+        """Return a one dimensional list representation of the individual"""
+        l = []
+        for layer in self.chromosome:
+            l.extend(layer.serialize())
+        return l
+
+
+    @staticmethod
+    def deserialize(data, layers, activation_functions):
+        """Return a NNIndividual from given serialized data"""
+        chromosome = []
+        pointer = 0
+        for i, activation_function in enumerate(activation_functions):
+            layer_size = layers[i+1] * (1 + layers[i])
+            chromosome.append(NNLayer.deserialize(data[pointer:pointer+layer_size], layers[i],
+                                                  layers[i+1], activation_function))
+            pointer += layer_size
+        return NNIndividual(layers, activation_functions, chromosome=chromosome)
+
+
+
 class NNLayer:
     """A Neural Network layer"""
 
-    def __init__(self, input_count, neuron_count, activation_function):
+    def __init__(self, input_count, neuron_count, activation_function, weights=None, biases=None):
         self.activation_function = activation_function
-        self.weights = np.random.randn(neuron_count, input_count) * 0.1
-        self.biases = np.random.randn(neuron_count, 1) * 0.1
+        self.weights = weights if weights is not None \
+                               else np.random.randn(neuron_count, input_count) * 0.1
+        self.biases = biases if biases is not None \
+                             else np.random.randn(neuron_count, 1) * 0.1
 
     def propagate(self, values):
         """Propagate given values throught the layer"""
@@ -102,3 +126,16 @@ class NNLayer:
     def from_string(string):
         """Load a NNLayer from a string"""
         return pickle.loads(codecs.decode(string.encode(), 'base64'))
+
+    def serialize(self):
+        """Return a one dimensional list representation of the layer"""
+        layer_len = len(self.weights[0])*len(self.biases)+len(self.biases)
+        return np.append(self.weights, self.biases, axis=1).reshape(layer_len).tolist()
+
+    @staticmethod
+    def deserialize(data, input_count, neuron_count, activation_function):
+        """Return a NNLayer instance from given serialized data"""
+        array = np.array(data).reshape(neuron_count, input_count+1)
+        biases = array[:, [-1]]
+        weights = np.delete(array, np.s_[-1], axis=1)
+        return NNLayer(input_count, neuron_count, activation_function, weights, biases)
