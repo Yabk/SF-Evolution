@@ -3,29 +3,7 @@ import codecs
 import pickle
 from copy import deepcopy
 import numpy as np
-from ..individual import Individual, IndividualGenerator
-
-
-class NNGenerator(IndividualGenerator):
-    """A Neural Network factory"""
-
-    def __init__(self, layers, activation_functions):
-        """Initialize the neural network hyperparameters
-
-        :param layers: Layer architecture. A list of neuron counts for each layer.
-        :param activation_functions: A list of activation_functions for each layer.
-        """
-        super().__init__()
-        self.layers = layers
-        self.activation_functions = activation_functions
-
-    def generate(self, chromosome=None):
-        """Generate an individual using predefined hyperparameters.
-
-        :param chromosome: Use given chromosome value for new individual
-                           Random if None
-        """
-        return NNIndividual(self.layers, self.activation_functions, chromosome=chromosome)
+from ..individual import Individual
 
 
 class NNIndividual(Individual):

@@ -1,35 +1,8 @@
 """Module containing Cartesian Genetic Programming model of an Individual"""
 import random
 from math import pi
-from ..individual import Individual, IndividualGenerator
+from ..individual import Individual
 from .modules import *
-
-
-class CGPGenerator(IndividualGenerator):
-    """A CPG individual factory"""
-
-    def __init__(self, input_len, grid_size, output_len, constant_len,
-                 constants=(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, pi),
-                 modules=(module_sum, module_difference, module_product,
-                          module_quotient, module_sine, module_cosine,
-                          module_negative, min, max)):
-        """Initialize CPG hyperparameters"""
-        super().__init__()
-        self.input_len = input_len
-        self.grid_size = grid_size
-        self.output_len = output_len
-        self.constant_len = constant_len
-        self.constants = constants
-        self.modules = modules
-
-    def generate(self, chromosome=None):
-        """Generate an individual using predefined hyperparameters.
-
-        :param chromosome: Use given chromosome value for new individual
-                           Random if None.
-        """
-        return CGPIndividual(self.input_len, self.grid_size, self.output_len, self.constant_len,
-                             self.constants, self.modules, chromosome=chromosome)
 
 
 class CGPIndividual(Individual):

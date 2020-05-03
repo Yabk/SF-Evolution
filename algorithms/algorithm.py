@@ -81,7 +81,8 @@ class Algorithm(ABC):
         if not os.path.isdir(self.SAVED_POPULATIONS_DIR):
             os.mkdir(self.SAVED_POPULATIONS_DIR)
         save_dir = self.SAVED_POPULATIONS_DIR+'/'+\
-                   datetime.today().isoformat()+'-'+self.__class__.__name__+'/'
+                   datetime.today().isoformat()+'-'+self.__class__.__name__+'-'+\
+                   self.individual_generator.individual_class.__name__+'/'
         os.mkdir(save_dir)
         for i, individual in enumerate(self.population, start=1):
             individual.to_file(save_dir+f'{i:04}')
