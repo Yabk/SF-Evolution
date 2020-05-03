@@ -1,7 +1,7 @@
 """Module containing a test run of Genetic Algorithm and Neural Network
 in problem of Iris flower classification
 """
-from selectors.roulette_wheel_selector import RouletteWheelSelector
+from selections.roulette_wheel_selector import RouletteWheelSelector
 from reporters.best_individual_reporter import BestIndividualReporter
 from evaluators.iris.iris_flower import IrisFlowerEvaluator
 from mutations.nn.normal_mutation import NNNormalMutation
