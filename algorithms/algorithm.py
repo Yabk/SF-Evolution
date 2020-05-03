@@ -1,11 +1,16 @@
 """Module containing learning algorithm abstract class"""
 import os
+import sys
+from typing import Final
 from abc import ABC, abstractmethod
 from datetime import datetime
+from signal import signal, SIGINT
 
 
 class Algorithm(ABC):
     """Abstract learning algorithm class"""
+
+    SAVED_POPULATIONS_DIR: Final = './saved_populations'
 
     def __init__(self, reporters, max_iterations, evaluator, individual_generator,
                  target_fitness=None):
@@ -26,6 +31,13 @@ class Algorithm(ABC):
         self.best_individual = None
         self.population = []
         self.iteration = 0
+
+        def signal_handler(*args):
+            print("Received SIGINT. Stopping the run and saving the current population.")
+            self._save_population()
+            sys.exit()
+
+        signal(SIGINT, signal_handler)
 
     @abstractmethod
     def run(self):
@@ -62,3 +74,14 @@ class Algorithm(ABC):
             self.best_individual = self.population[0]
             return self._stop_condition()
         return False
+
+
+    def _save_population(self):
+        """Save the current population to 'saved_populations' directory"""
+        if not os.path.isdir(self.SAVED_POPULATIONS_DIR):
+            os.mkdir(self.SAVED_POPULATIONS_DIR)
+        save_dir = self.SAVED_POPULATIONS_DIR+'/'+\
+                   datetime.today().isoformat()+'-'+self.__class__.__name__+'/'
+        os.mkdir(save_dir)
+        for i, individual in enumerate(self.population, start=1):
+            individual.to_file(save_dir+f'{i:04}')
