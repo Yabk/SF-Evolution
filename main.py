@@ -8,8 +8,8 @@ from genotypes.individual import IndividualGenerator
 
 def main():
     evaluator = BreezyEvaluator((last_hit.LastHitReinforcer(), win.WinReinforcer()),
-                                listener_address=('192.168.88.152', 8088),
-                                breezy_url='http://192.168.88.26:8085')
+                                listener_address=('127.0.0.1', 8088),
+                                breezy_url='http://127.0.0.1:8085')
 
     reporters = [BestIndividualReporter()]
 
