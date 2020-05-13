@@ -17,19 +17,21 @@ class BreezyEvaluator(Evaluator):
     CREEPS_INDICES = range(85, 211, 14)
 
     def __init__(self, reinforcers, listener_address=('127.0.0.1', 8086),
-                 breezy_url='http://127.0.0.1:8085'):
+                 breezy_url='http://127.0.0.1:8085', crash_callback=None):
         """Initialize the Evaluator
 
         :param listener_address: (string, int) tuple containing ip address and
                                  port that the listener will use
         :param breezy_url: Url to breezy server
         :param reinforcers: List of reinforcers
+        :param crash_callback: Optional function to call when the run crashes.
         """
         super().__init__(111, 26)
         self.listener = Listener(self, address=listener_address, breezy_url=breezy_url)
         self.breezy_url = breezy_url
         self.reinforcers = reinforcers
         self.individuals = []
+        self.crash_callback = crash_callback
 
 
     def callback(self, features):
@@ -51,6 +53,16 @@ class BreezyEvaluator(Evaluator):
 
         :param data: Data received from breezy server
         """
+        if data['status'] not in ('DONE', 'WAITING'):
+            print('Run not finished cleanly. Data from server below:')
+            print(data)
+            self.listener.stop_server()
+            if self.crash_callback:
+                print('Calling the crash callback function...')
+                self.crash_callback()
+
+            return
+
         fitness = 0
         for reinforcer in self.reinforcers:
             fitness += reinforcer.end(data)
@@ -119,3 +131,8 @@ class BreezyEvaluator(Evaluator):
             processed.extend((pos_1_sum/creep_count, pos_2_sum/creep_count))
 
         return processed
+
+
+    def register_crash_callback(self, crash_callback):
+        """Register a callback function that will be called in case of a failed run"""
+        self.crash_callback = crash_callback

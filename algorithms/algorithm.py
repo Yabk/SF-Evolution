@@ -34,7 +34,7 @@ class Algorithm(ABC):
 
         def signal_handler(*args):
             print("Received SIGINT. Stopping the run and saving the current population.")
-            self._save_population()
+            self.save_population()
             sys.exit()
 
         signal(SIGINT, signal_handler)
@@ -76,7 +76,7 @@ class Algorithm(ABC):
         return False
 
 
-    def _save_population(self):
+    def save_population(self):
         """Save the current population to 'saved_populations' directory"""
         if not os.path.isdir(self.SAVED_POPULATIONS_DIR):
             os.mkdir(self.SAVED_POPULATIONS_DIR)

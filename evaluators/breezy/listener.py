@@ -89,3 +89,7 @@ class Listener:
     def join(self):
         """Wait until runs finish"""
         self._thread.join()
+
+    def stop_server(self):
+        """Stop HTTP server"""
+        self._server.running = False
