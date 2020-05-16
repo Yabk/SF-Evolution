@@ -10,13 +10,14 @@ class XPMReinforcer(Reinforcer):
                   18845.0, 20570.0, 22545.0, 24770.0, 27245.0, 30295.0, 34295.0, 39295.0, 45295.0,
                   52295.0, 56045]
 
-    def __init__(self):
+    def __init__(self, multiplier=1):
         self.level = 1
         self.time = 0
+        self.multiplier = multiplier
 
     def update(self, features, action):
         self.level = features[0]
         self.time = features[39]
 
     def end(self, data):
-        return self.XP_AMOUNTS[self.level]*60/self.time
+        return self.XP_AMOUNTS[self.level] * 60/self.time * self.multiplier
