@@ -39,6 +39,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 requests.get(webhook_url)
             else:
                 self.server.running = False
+            self.send_response(200)
 
     def log_message(self, format, *args):
         """Silence logging"""
@@ -82,9 +83,9 @@ class Listener:
         self.run_count = run_count
         self._thread = threading.Thread(target=self._run)
         self._thread.daemon = True
+#        requests.post(url=self._server.breezy_url+'/agent/config',
+#                      data=json.dumps(self.agent_config))
         self._thread.start()
-        requests.post(url=self._server.breezy_url+'/agent/config',
-                      data=json.dumps(self.agent_config))
 
     def join(self):
         """Wait until runs finish"""
