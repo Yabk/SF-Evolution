@@ -26,7 +26,7 @@ class BreezyEvaluator(Evaluator):
         :param reinforcers: List of reinforcers
         :param crash_callback: Optional function to call when the run crashes.
         """
-        super().__init__(111, 26)
+        super().__init__(113, 26)
         self.listener = Listener(self, address=listener_address, breezy_url=breezy_url)
         self.breezy_url = breezy_url
         self.reinforcers = reinforcers
@@ -95,10 +95,13 @@ class BreezyEvaluator(Evaluator):
         mana_opp_normalized = data[35]/data[36]
         tower_health_normalized = data[58]/data[59]
         tower_opp_health_normalized = data[64]/data[65]
+        facing = data[28]/180 * math.pi
+        facing_opp = data[54]/180 * math.pi
         processed.extend((time_since_last_attack, time_since_last_attack_opp,
                           health_normalized, health_opp_normalized,
                           mana_normalized, mana_opp_normalized,
-                          tower_health_normalized, tower_opp_health_normalized))
+                          tower_health_normalized, tower_opp_health_normalized,
+                          facing, facing_opp))
 
         # Process creep features
         pos_1_sum = 0
