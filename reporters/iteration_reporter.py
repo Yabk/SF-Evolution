@@ -11,7 +11,7 @@ class IterationReporter(Reporter):
         :param start_at: Starting iteration
         """
         super().__init__()
-        self.current = 0
+        self.current = start_at
 
     def report(self, individuals):
         """Report the current iteration"""
